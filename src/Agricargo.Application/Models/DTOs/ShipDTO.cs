@@ -13,5 +13,7 @@ namespace Agricargo.Application.Models.DTOs
         public float Capacity { get; set; }
         public string? Captain { get; set; }
         public string? ShipPlate { get; set; }
+
+        public string Status { get; set; }
     }
 }

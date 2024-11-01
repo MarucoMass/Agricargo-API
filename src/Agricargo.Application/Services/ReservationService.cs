@@ -1,6 +1,4 @@
-﻿
-
-using Agricargo.Application.Interfaces;
+﻿using Agricargo.Application.Interfaces;
 using Agricargo.Application.Models.DTOs;
 using Agricargo.Domain.Entities;
 using Agricargo.Domain.Interfaces;
@@ -39,6 +37,7 @@ public class ReservationService : IReservationService
         }
 
         var currentDate = DateTime.Now;
+
         if (trip.DepartureDate <= currentDate)
         {
             throw new Exception("Viaje no disponible.");
@@ -59,13 +58,12 @@ public class ReservationService : IReservationService
             PurchaseAmount = amountReserved,
             PurchaseDate = currentDate,
             DepartureDate = trip.DepartureDate,
-            ArriveDate = trip.ArriveDate,
-            ReservationStatus = trip.TripState
+            ArriveDate = trip.ArriveDate
         };
 
         trip.AvailableCapacity -= amountReserved;
 
-    
+
         _tripRepository.Update(trip);
 
         _reservationRepository.Add(reservation);
@@ -77,6 +75,8 @@ public class ReservationService : IReservationService
 
         var reservations = _reservationRepository.GetReservationsByClientId(userIdClaim);
 
+        var currentDate = DateTime.Now;
+
         // Mapea las reservas a DTOs
         var reservationDtos = reservations.Select(r => new ReservationDTO
         {
@@ -85,17 +85,35 @@ public class ReservationService : IReservationService
             Date = r.PurchaseDate,
             Price = r.PurchasePrice,
             GrainQuantity = r.PurchaseAmount,
-            Status = r.ReservationStatus
+            Status = currentDate < r.DepartureDate ? "Pendiente"
+         : currentDate < r.ArriveDate ? "En camino"
+         : "Finalizado"
         }).ToList();
 
         return reservationDtos;
     }
 
-    public List<Reservation> GetCompanyReservations(ClaimsPrincipal user)
+    public List<ReservationDTO> GetCompanyReservations(ClaimsPrincipal user)
     {
         var userIdClaim = GetIdFromUser(user);
 
-        return _reservationRepository.GetReservationsByCompanyId(userIdClaim);
+        var reservations = _reservationRepository.GetReservationsByCompanyId(userIdClaim);
+
+        var currentDate = DateTime.Now;
+
+        var reservationDtos = reservations.Select(r => new ReservationDTO
+        {
+            Id = r.Id,
+            Trip = $"{r.Trip.Origin} - {r.Trip.Destination}",
+            Date = r.PurchaseDate,
+            Price = r.PurchasePrice,
+            GrainQuantity = r.PurchaseAmount,
+            Status = currentDate < r.DepartureDate ? "Pendiente"
+         : currentDate < r.ArriveDate ? "En camino"
+         : "Finalizado"
+        }).ToList();
+
+        return reservationDtos;
     }
     public void DeleteReservation(int reservationId, ClaimsPrincipal user)
     {
@@ -130,7 +148,7 @@ public class ReservationService : IReservationService
 
         trip.AvailableCapacity += reservation.PurchaseAmount;
 
-    
+
 
         _tripRepository.Update(trip);
 
@@ -138,7 +156,7 @@ public class ReservationService : IReservationService
 
     }
 
- 
+
 
 
     private Guid GetIdFromUser(ClaimsPrincipal user)

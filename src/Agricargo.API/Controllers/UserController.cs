@@ -33,8 +33,8 @@ namespace Agricargo.API.Controllers
             }
         }
 
-        [HttpDelete("DeleteUser")]
-        public IActionResult DeleteUser() 
+        [HttpDelete("DeleteSelf")]
+        public IActionResult DeleteSelf() 
         {
             try
             {

@@ -16,5 +16,7 @@ namespace Agricargo.Application.Interfaces
         public void UpdateUser(UpdateUserRequest userUpdate, ClaimsPrincipal user);
 
         public void DeleteUser(ClaimsPrincipal user);
+
+        public List<UserDTO> GetUsers(ClaimsPrincipal user);
     }
 }

@@ -66,7 +66,7 @@ namespace Agricargo.Application.Services
         }
 
 
-        public void DeleteUser(ClaimsPrincipal user)
+        public void DeleteSelf(ClaimsPrincipal user)
         {
             var userId = GetIdFromUser(user);
             var existingUser = _context.FindByGuid(userId);
@@ -109,6 +109,50 @@ namespace Agricargo.Application.Services
             }
 
             throw new Exception("No se encontro el usuario");
+        }
+
+        public List<UserDTO> GetUsers(ClaimsPrincipal user)
+        {
+            var userId = GetIdFromUser(user);
+
+            var existingUser = _context.FindByGuid(userId);
+            if (existingUser == null)
+            {
+                throw new KeyNotFoundException("No se encontró el usuario.");
+            }
+
+            var users = _context.Get()
+                .Where(u => u.Id != userId)
+                .Select(u => new UserDTO
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Email = u.Email,
+                    TypeUser = u.TypeUser
+                })
+                .ToList();
+
+            return users;
+        }
+
+        public void DeleteUser(ClaimsPrincipal user, string userDeleted)
+        {
+            var userId = GetIdFromUser(user);
+
+            if (_context.IsSuperAdmin(userId))
+            {
+                Guid guidUser = Guid.Parse(userDeleted);
+                var existingUser = _context.FindByGuid(guidUser);
+
+                if (existingUser == null)
+            {
+                throw new Exception("No se encontro el usuario");
+            }
+                _context.Delete(existingUser);
+                return;
+            }
+
+            throw new UnauthorizedAccessException("No esta autorizado a realizar esta accion");
         }
     }
 }
