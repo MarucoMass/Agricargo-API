@@ -38,7 +38,7 @@ namespace Agricargo.API.Controllers
         {
             try
             {
-                _userService.DeleteUser(User);
+                _userService.DeleteSelf(User);
                 return Ok("Usuario eliminado");
             }
             catch (UnauthorizedAccessException ex)

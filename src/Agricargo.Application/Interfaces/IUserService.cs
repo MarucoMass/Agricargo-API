@@ -15,7 +15,9 @@ namespace Agricargo.Application.Interfaces
         public UserDTO GetUserInfo(ClaimsPrincipal user);
         public void UpdateUser(UpdateUserRequest userUpdate, ClaimsPrincipal user);
 
-        public void DeleteUser(ClaimsPrincipal user);
+        public void DeleteSelf(ClaimsPrincipal user);
+
+        //public void DeleteUser(ClaimsPrincipal user, string userDeleted);
 
         public List<UserDTO> GetUsers(ClaimsPrincipal user);
     }

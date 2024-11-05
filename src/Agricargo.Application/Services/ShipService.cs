@@ -137,10 +137,9 @@ public class ShipService : IShipService
         _shipRepository.Add(new Ship
         {
             TypeShip = shipService.TypeShip,
-            Capacity = shipService.Capacity,
+            Capacity = (float) shipService.Capacity,
             Captain = shipService.Captain,
             ShipPlate = shipService.ShipPlate,
-            //Available = shipService.Available,
             CompanyId = GetIdFromUser(user)
         });
     }
@@ -158,7 +157,7 @@ public class ShipService : IShipService
 
         var ships = _shipRepository.Get();
 
-        var exisitingShip = ships.FirstOrDefault(s => s.ShipPlate == shipRequest.ShipPlate);
+        var exisitingShip = ships.FirstOrDefault(s => s.ShipPlate == shipRequest.ShipPlate && s.Id != id);
 
 
         if (exisitingShip != null)
@@ -170,11 +169,11 @@ public class ShipService : IShipService
         {
             throw new UnauthorizedAccessException("No tienes permiso para modificar este barco");
         }
-        ship.TypeShip = shipRequest.TypeShip ?? ship.TypeShip;
-        ship.Capacity = shipRequest.Capacity != 0 ? shipRequest.Capacity : ship.Capacity;
-        ship.Captain = shipRequest.Captain ?? ship.Captain;
-        ship.ShipPlate = shipRequest.ShipPlate ?? ship.ShipPlate;
-        //ship.Available = shipRequest.Available;
+        ship.TypeShip = !string.IsNullOrEmpty(shipRequest.TypeShip) ? shipRequest.TypeShip : ship.TypeShip;
+        ship.Capacity = (float)(shipRequest.Capacity > 0 ? shipRequest.Capacity : ship.Capacity);
+        ship.Captain = !string.IsNullOrEmpty(shipRequest.Captain) ? shipRequest.Captain : ship.Captain;
+        ship.ShipPlate = !string.IsNullOrEmpty(shipRequest.ShipPlate) ? shipRequest.ShipPlate : ship.ShipPlate;
+
 
         _shipRepository.Update(ship);
     }

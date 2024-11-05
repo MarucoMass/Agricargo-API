@@ -10,7 +10,7 @@ namespace Agricargo.Application.Models.Requests
     public class ShipCreateRequest
     {
         public string? TypeShip { get; set; }
-        public float Capacity { get; set; }
+        public float? Capacity { get; set; }
         public string? Captain { get; set; }
         public string? ShipPlate { get; set; }
         //public bool Available { get; set; } = true;
