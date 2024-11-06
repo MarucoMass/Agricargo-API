@@ -18,6 +18,8 @@ public class FavoriteRepository : BaseRepository<Favorite>, IFavoriteRepository
     {
         return _context.Favorites
             .Include(f => f.Trip)
+            .ThenInclude(t => t.Ship)
+            .ThenInclude(s => s.Company)
             .Where(f => f.ClientId == clientId)
             .ToList();
     }

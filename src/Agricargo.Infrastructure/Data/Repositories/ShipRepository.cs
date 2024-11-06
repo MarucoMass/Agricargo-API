@@ -18,6 +18,7 @@ public class ShipRepository : BaseRepository<Ship>, IShipRepository
     public List<Ship> GetCompanyShips(Guid companyId)
     {
         return _context.Ships
+            .Include(s => s.Company)
             .Include(s => s.Trips)
             .Where(s => s.CompanyId == companyId)
             .ToList();
@@ -26,6 +27,7 @@ public class ShipRepository : BaseRepository<Ship>, IShipRepository
     public Ship GetCompanyShip(int shipId)
     {
         return _context.Ships
+            .Include(s => s.Company)
             .Include(s => s.Trips)
             .FirstOrDefault(s => s.Id == shipId);
     }

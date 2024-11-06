@@ -151,7 +151,23 @@ public class TripService : ITripService
                 PricePerTon = t.Price,
                 DepartureDate = t.DepartureDate,
                 ArriveDate = t.ArriveDate,
-                Capacity = t.AvailableCapacity
+                Capacity = t.AvailableCapacity,
+                Ship = new ShipDTO
+                {
+                 Id = t.Ship.Id,
+                 TypeShip = t.Ship.TypeShip,
+                 Capacity = t.Ship.Capacity,
+                 Captain = t.Ship.Captain,
+                 ShipPlate = t.Ship.ShipPlate,
+                 Status = t.Ship.AvailabilityStatus,
+                 Company = new CompanyDTO
+                    {
+                        Name = t.Ship.Company.Name,
+                        CompanyName = t.Ship.Company.CompanyName
+                    }
+
+                }
+
             })
             .ToList();
 
@@ -172,7 +188,22 @@ public class TripService : ITripService
                 PricePerTon = t.Price,
                 DepartureDate = t.DepartureDate,
                 ArriveDate = t.ArriveDate,
-                Capacity = t.AvailableCapacity
+                Capacity = t.AvailableCapacity,
+                Ship = new ShipDTO
+                {
+                 Id = t.Ship.Id,
+                 TypeShip = t.Ship.TypeShip,
+                 Capacity = t.Ship.Capacity,
+                 Captain = t.Ship.Captain,
+                 ShipPlate = t.Ship.ShipPlate,
+                 Status = t.Ship.AvailabilityStatus,
+                 Company = new CompanyDTO
+                    {
+                        Name = t.Ship.Company.Name,
+                        CompanyName = t.Ship.Company.CompanyName
+                    }
+
+                }
             })
             .ToList();
 

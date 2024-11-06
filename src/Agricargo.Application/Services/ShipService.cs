@@ -63,7 +63,12 @@ public class ShipService : IShipService
             Capacity = ship.Capacity,
             Captain = ship.Captain,
             ShipPlate = ship.ShipPlate,
-            Status = ship.AvailabilityStatus
+            Status = ship.AvailabilityStatus,
+            Company = new CompanyDTO
+            {
+                Name = ship.Company.Name,
+                CompanyName = ship.Company.CompanyName
+            }
         };
 
         return shipDto;
@@ -83,7 +88,12 @@ public class ShipService : IShipService
                 Captain = ship.Captain,
                 Capacity = ship.Capacity,
                 ShipPlate = ship.ShipPlate,
-                Status = ship.AvailabilityStatus
+                Status = ship.AvailabilityStatus,
+                Company = new CompanyDTO
+                {
+                    Name = ship.Company.Name,
+                    CompanyName = ship.Company.CompanyName
+                }
             }).ToList();
         }
 
