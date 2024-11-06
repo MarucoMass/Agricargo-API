@@ -1,6 +1,4 @@
-﻿
-
-using Agricargo.Application.Models.Requests;
+﻿using Agricargo.Application.Models.Requests;
 using Agricargo.Domain.Entities;
 using Agricargo.Domain.Interfaces;
 using System.Security.Claims;
@@ -65,6 +63,7 @@ public class ShipService : IShipService
             Capacity = ship.Capacity,
             Captain = ship.Captain,
             ShipPlate = ship.ShipPlate,
+            Status = ship.AvailabilityStatus
         };
 
         return shipDto;
@@ -75,16 +74,17 @@ public class ShipService : IShipService
         var userId = GetIdFromUser(user);
         var ships = _shipRepository.GetCompanyShips(userId);
 
-        if (ships != null) 
+        if (ships != null)
         {
             return ships.Select(ship => new ShipDTO
-                {
-                    Id = ship.Id,
-                    TypeShip = ship.TypeShip,
-                    Captain = ship.Captain,
-                    Capacity = ship.Capacity,
-                    ShipPlate = ship.ShipPlate,
-                }).ToList();
+            {
+                Id = ship.Id,
+                TypeShip = ship.TypeShip,
+                Captain = ship.Captain,
+                Capacity = ship.Capacity,
+                ShipPlate = ship.ShipPlate,
+                Status = ship.AvailabilityStatus
+            }).ToList();
         }
 
         throw new Exception("No se encontraron barcos");
@@ -107,16 +107,16 @@ public class ShipService : IShipService
             throw new UnauthorizedAccessException("No está habilitado para borrar ese barco");
         }
 
-        if (ship.Trips != null) 
+        if (ship.Trips != null)
         {
-            
+
             foreach (var trip in ship.Trips)
             {
-                if (_reservationRepository.TripHasAReservation(trip.Id)) 
+                if (_reservationRepository.TripHasAReservation(trip.Id))
                 {
                     throw new Exception($"El viaje {trip.Id} no se puede borrar porque tiene una reserva. Accion Cancelada");
                 }
-                    _tripRepository.Delete(trip);
+                _tripRepository.Delete(trip);
             }
         }
 
@@ -129,7 +129,7 @@ public class ShipService : IShipService
 
         var exisitingShip = ships.FirstOrDefault(s => s.ShipPlate == shipService.ShipPlate);
 
-        if (exisitingShip != null) 
+        if (exisitingShip != null)
         {
             throw new Exception("Ya existe un barco con la misma patente.");
         }
@@ -137,10 +137,9 @@ public class ShipService : IShipService
         _shipRepository.Add(new Ship
         {
             TypeShip = shipService.TypeShip,
-            Capacity = shipService.Capacity,
+            Capacity = (float) shipService.Capacity,
             Captain = shipService.Captain,
             ShipPlate = shipService.ShipPlate,
-            //Available = shipService.Available,
             CompanyId = GetIdFromUser(user)
         });
     }
@@ -158,10 +157,10 @@ public class ShipService : IShipService
 
         var ships = _shipRepository.Get();
 
-        var exisitingShip = ships.FirstOrDefault(s => s.ShipPlate == shipRequest.ShipPlate);
+        var exisitingShip = ships.FirstOrDefault(s => s.ShipPlate == shipRequest.ShipPlate && s.Id != id);
 
 
-        if (exisitingShip != null) 
+        if (exisitingShip != null)
         {
             throw new Exception("Ya existe un barco con la misma patente.");
         }
@@ -170,11 +169,11 @@ public class ShipService : IShipService
         {
             throw new UnauthorizedAccessException("No tienes permiso para modificar este barco");
         }
-        ship.TypeShip = shipRequest.TypeShip ?? ship.TypeShip;
-        ship.Capacity = shipRequest.Capacity != 0 ? shipRequest.Capacity : ship.Capacity;
-        ship.Captain = shipRequest.Captain ?? ship.Captain;
-        ship.ShipPlate = shipRequest.ShipPlate ?? ship.ShipPlate;
-        //ship.Available = shipRequest.Available;
+        ship.TypeShip = !string.IsNullOrEmpty(shipRequest.TypeShip) ? shipRequest.TypeShip : ship.TypeShip;
+        ship.Capacity = (float)(shipRequest.Capacity > 0 ? shipRequest.Capacity : ship.Capacity);
+        ship.Captain = !string.IsNullOrEmpty(shipRequest.Captain) ? shipRequest.Captain : ship.Captain;
+        ship.ShipPlate = !string.IsNullOrEmpty(shipRequest.ShipPlate) ? shipRequest.ShipPlate : ship.ShipPlate;
+
 
         _shipRepository.Update(ship);
     }

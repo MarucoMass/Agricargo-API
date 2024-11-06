@@ -44,7 +44,7 @@ namespace Agricargo.API.Controllers
             }
         }
 
-        [HttpDelete("deleteFavorite")]
+        [HttpDelete("deleteFavorite/{id}")]
         public IActionResult Delete(int id)
         {
             try

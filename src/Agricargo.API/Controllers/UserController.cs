@@ -33,12 +33,12 @@ namespace Agricargo.API.Controllers
             }
         }
 
-        [HttpDelete("DeleteUser")]
-        public IActionResult DeleteUser() 
+        [HttpDelete("DeleteSelf")]
+        public IActionResult DeleteSelf() 
         {
             try
             {
-                _userService.DeleteUser(User);
+                _userService.DeleteSelf(User);
                 return Ok("Usuario eliminado");
             }
             catch (UnauthorizedAccessException ex)
@@ -64,6 +64,38 @@ namespace Agricargo.API.Controllers
                 return Unauthorized(ex.Message);
             }
             catch (Exception ex) 
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("GetUsers")]
+        public IActionResult GetUsers() 
+        {
+            try
+            {
+                var users = _userService.GetUsers(User);
+                return Ok(users);
+            }
+            catch (Exception ex)
+            { 
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteUser")]
+        public IActionResult DeleteUser(string idUser)
+        {
+            try
+            {
+                _userService.DeleteUser(User, idUser);
+                return Ok("Eliminado con exito");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }

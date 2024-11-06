@@ -12,7 +12,7 @@ public interface IReservationService
 
     public List<ReservationDTO> GetClientReservations(ClaimsPrincipal user);
 
-    public List<Reservation> GetCompanyReservations(ClaimsPrincipal user);
+    public List<ReservationDTO> GetCompanyReservations(ClaimsPrincipal user);
 
     public void DeleteReservation(int reservationId, ClaimsPrincipal user);
 }
