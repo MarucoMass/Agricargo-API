@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Agricargo.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,10 @@ namespace Agricargo.Application.Models.DTOs
 {
     public class FavoriteDTO
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
-        public int TripId { get; set; }
+        public int? TripId { get; set; }
 
-        public Guid ClientId { get; set; }
+        public TripDTO? Trip { get; set; }
     }
 }

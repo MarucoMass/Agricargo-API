@@ -32,6 +32,7 @@ public class TripRepository : BaseRepository<Trip>, ITripRepository
     {
         return _context.Trips
         .Include(t => t.Ship)
+        .ThenInclude(s => s.Company)
         .ToList();
     }
 }

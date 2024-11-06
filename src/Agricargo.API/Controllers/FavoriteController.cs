@@ -31,12 +31,12 @@ namespace Agricargo.API.Controllers
         }
 
         [HttpPost("addFavorite")]
-        public IActionResult Post(int id)
+        public IActionResult Post([FromBody] int tripId)
         {
             try
             {
-                _favoriteService.AddFavorite(User, id);
-                return Ok("Favorito agregado a la lista");
+               var fav =  _favoriteService.AddFavorite(User, tripId);
+                return Ok(fav);
             }
             catch (Exception ex) 
             {
@@ -49,8 +49,8 @@ namespace Agricargo.API.Controllers
         {
             try
             {
-                _favoriteService.DeleteFavorite(User, id);
-                return Ok("Favorito eliminado de la lista");
+                var deletedFav = _favoriteService.DeleteFavorite(User, id);
+                return Ok(deletedFav);
             }
             catch (UnauthorizedAccessException ex)
             {

@@ -30,7 +30,7 @@ public class FavoriteService : IFavoriteService
 
         return parsedGuid;
     }
-    public void AddFavorite(ClaimsPrincipal user, int tripId)
+    public int AddFavorite(ClaimsPrincipal user, int tripId)
     {
         var trip = _tripService.Get(tripId);
 
@@ -57,32 +57,87 @@ public class FavoriteService : IFavoriteService
 
         _favoriteRepository.Add(favorite);
 
+        return favorite.Id;
     }
 
-    public List<FavoriteDTO> GetFavorites(ClaimsPrincipal user)
+    public List<TripDTO> GetFavorites(ClaimsPrincipal user)
     {
         var clientId = GetIdFromUser(user);
 
         var favorites = _favoriteRepository.GetClientFavorites(clientId);
 
-        if (favorites == null) 
+        if (favorites == null || !favorites.Any())
         {
             throw new Exception("No se encontraron favoritos");
         }
 
-        return favorites.Select(fav => new FavoriteDTO
-        {
-            Id = fav.Id,
-            TripId = fav.TripId,
-            ClientId = fav.ClientId
-        }).ToList();
+        //return favorites.Select(f => new FavoriteDTO
+        //{
+        //    Id = f.Id,
+        //    Trip = new TripDTO
+        //    {
+        //        Id = f.Trip.Id,
+        //        Origin = f.Trip.Origin,
+        //        Destination = f.Trip.Destination,
+        //        PricePerTon = f.Trip.Price,
+        //        DepartureDate = f.Trip.DepartureDate,
+        //        ArriveDate = f.Trip.ArriveDate,
+        //        Capacity = f.Trip.AvailableCapacity,
+        //        Ship = new ShipDTO
+        //        {
+        //            Id = f.Trip.Ship.Id,
+        //            TypeShip = f.Trip.Ship.TypeShip,
+        //            Capacity = f.Trip.Ship.Capacity,
+        //            Captain = f.Trip.Ship.Captain,
+        //            ShipPlate = f.Trip.Ship.ShipPlate,
+        //            Status = f.Trip.Ship.AvailabilityStatus,
+        //            Company = new CompanyDTO
+        //            {
+        //                Name = f.Trip.Ship.Company.Name,
+        //                CompanyName = f.Trip.Ship.Company.CompanyName
+        //            }
+        //        }
+
+        //    }
+        //}
+        //).ToList();
+
+        return favorites.Select(f => new TripDTO
+            {
+                Id = f.Trip.Id,
+                Origin = f.Trip.Origin,
+                Destination = f.Trip.Destination,
+                PricePerTon = f.Trip.Price,
+                DepartureDate = f.Trip.DepartureDate,
+                ArriveDate = f.Trip.ArriveDate,
+                Capacity = f.Trip.AvailableCapacity,
+                FavId = f.Id,
+                Ship = new ShipDTO
+                {
+                    Id = f.Trip.Ship.Id,
+                    TypeShip = f.Trip.Ship.TypeShip,
+                    Capacity = f.Trip.Ship.Capacity,
+                    Captain = f.Trip.Ship.Captain,
+                    ShipPlate = f.Trip.Ship.ShipPlate,
+                    Status = f.Trip.Ship.AvailabilityStatus,
+                    Company = new CompanyDTO
+                    {
+                        Name = f.Trip.Ship.Company.Name,
+                        CompanyName = f.Trip.Ship.Company.CompanyName
+                    }
+                }
+        }
+        ).ToList();
     }
 
-    public void DeleteFavorite(ClaimsPrincipal user, int id)
+
+    public int DeleteFavorite(ClaimsPrincipal user, int id)
     {
         var clientId = GetIdFromUser(user);
 
         var favorite = _favoriteRepository.GetFavoriteById(id);
+
+        var tripId = favorite.Id;
 
         if (favorite == null)
         {
@@ -95,6 +150,8 @@ public class FavoriteService : IFavoriteService
         }
 
         _favoriteRepository.Delete(favorite);
+
+        return tripId;
 
     }
 }

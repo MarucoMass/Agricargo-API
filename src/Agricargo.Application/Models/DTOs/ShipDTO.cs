@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Agricargo.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,7 @@ namespace Agricargo.Application.Models.DTOs
         public string? ShipPlate { get; set; }
 
         public string Status { get; set; }
+
+        public CompanyDTO Company { get; set; }
     }
 }

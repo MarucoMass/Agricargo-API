@@ -1,4 +1,6 @@
-﻿namespace Agricargo.Application.Models.DTOs;
+﻿using Agricargo.Domain.Entities;
+
+namespace Agricargo.Application.Models.DTOs;
 
 public class TripDTO
 {
@@ -9,4 +11,9 @@ public class TripDTO
     public DateTime DepartureDate { get; set; }
     public DateTime ArriveDate { get; set; }
     public float Capacity { get; set; }
+
+    public int? FavId { get; set; }
+
+    public ShipDTO Ship { get; set; }
+
 }
