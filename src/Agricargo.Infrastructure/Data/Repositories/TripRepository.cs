@@ -17,6 +17,7 @@ public class TripRepository : BaseRepository<Trip>, ITripRepository
     {
         return _context.Trips
         .Include(t => t.Ship)
+        .ThenInclude(s => s.Company)
         .Where(t => t.Ship.CompanyId == companyId)
         .ToList();
     }

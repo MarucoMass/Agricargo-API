@@ -87,7 +87,9 @@ public class ReservationService : IReservationService
             GrainQuantity = r.PurchaseAmount,
             Status = currentDate < r.DepartureDate ? "Pendiente"
          : currentDate < r.ArriveDate ? "En camino"
-         : "Finalizado"
+         : "Finalizado",
+            DepartureDate = r.Trip.DepartureDate,
+            ArriveDate = r.Trip.ArriveDate
         }).ToList();
 
         return reservationDtos;
@@ -110,7 +112,9 @@ public class ReservationService : IReservationService
             GrainQuantity = r.PurchaseAmount,
             Status = currentDate < r.DepartureDate ? "Pendiente"
          : currentDate < r.ArriveDate ? "En camino"
-         : "Finalizado"
+         : "Finalizado",
+            DepartureDate = r.Trip.DepartureDate,
+            ArriveDate = r.Trip.ArriveDate
         }).ToList();
 
         return reservationDtos;

@@ -249,9 +249,10 @@ public class TripService : ITripService
 
         trip.Origin = tripRequest.Origin ?? trip.Origin;
         trip.Destination = tripRequest.Destination ?? trip.Destination;
+        trip.Price = tripRequest.PricePerTon != 0 ? tripRequest.PricePerTon : trip.Price;
         trip.DepartureDate = tripRequest.DepartureDate;
         trip.ArriveDate = tripRequest.ArriveDate;
-        trip.Price = tripRequest.Price != 0 ? tripRequest.Price : trip.Price;
+        
 
         _tripRepository.Update(trip);
 
@@ -298,7 +299,22 @@ public class TripService : ITripService
             PricePerTon = t.Price,
             DepartureDate = t.DepartureDate,
             ArriveDate = t.ArriveDate,
-            Capacity = t.Ship.Capacity
+            Capacity = t.Ship.Capacity,
+            Ship = new ShipDTO
+            {
+                Id = t.Ship.Id,
+                TypeShip = t.Ship.TypeShip,
+                Capacity = t.Ship.Capacity,
+                Captain = t.Ship.Captain,
+                ShipPlate = t.Ship.ShipPlate,
+                Status = t.Ship.AvailabilityStatus,
+                Company = new CompanyDTO
+                {
+                    Name = t.Ship.Company.Name,
+                    CompanyName = t.Ship.Company.CompanyName
+                }
+
+            }
         }).ToList();
     }
 
