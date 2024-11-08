@@ -29,7 +29,7 @@ namespace Agricargo.Infrastructure.Data.Repositories
             _context.SaveChanges();
         }
 
-        public T Get(int id)
+        public virtual T Get(int id)
         {
             return _context.Set<T>().Find(id);
         }

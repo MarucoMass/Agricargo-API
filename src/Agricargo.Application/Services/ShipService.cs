@@ -101,6 +101,37 @@ public class ShipService : IShipService
 
     }
 
+    //public void Delete(ClaimsPrincipal user, int id)
+    //{
+    //    var ship = _shipRepository.Get(id);
+
+    //    if (ship is null)
+    //    {
+    //        throw new Exception("El barco no existe");
+    //    }
+
+    //    var userId = GetIdFromUser(user);
+
+    //    if (!IsShipOwnedByCompany(ship.Id, userId))
+    //    {
+    //        throw new UnauthorizedAccessException("No está habilitado para borrar ese barco");
+    //    }
+
+    //    if (ship.Trips.Any())
+    //    {
+
+    //        foreach (var trip in ship.Trips)
+    //        {
+    //            if (_reservationRepository.TripHasAReservation(trip.Id))
+    //            {
+    //                throw new Exception($"El viaje {trip.Id} no se puede borrar porque tiene una reserva. Accion Cancelada");
+    //            }
+    //            _tripRepository.Delete(trip);
+    //        }
+    //    }
+
+    //    _shipRepository.Delete(ship);
+    //}
     public void Delete(ClaimsPrincipal user, int id)
     {
         var ship = _shipRepository.Get(id);
@@ -117,21 +148,26 @@ public class ShipService : IShipService
             throw new UnauthorizedAccessException("No está habilitado para borrar ese barco");
         }
 
-        if (ship.Trips != null)
+        if (ship.Trips.Count() > 0)
         {
-
             foreach (var trip in ship.Trips)
             {
                 if (_reservationRepository.TripHasAReservation(trip.Id))
                 {
-                    throw new Exception($"El viaje {trip.Id} no se puede borrar porque tiene una reserva. Accion Cancelada");
+                    throw new Exception($"El barco no se puede borrar porque tiene una reserva asociada. Acción cancelada");
                 }
-                _tripRepository.Delete(trip);
             }
+        }
+
+
+        foreach (var trip in ship.Trips)
+        {
+            _tripRepository.Delete(trip);
         }
 
         _shipRepository.Delete(ship);
     }
+
 
     public void Add(ShipCreateRequest shipService, ClaimsPrincipal user)
     {
@@ -147,7 +183,7 @@ public class ShipService : IShipService
         _shipRepository.Add(new Ship
         {
             TypeShip = shipService.TypeShip,
-            Capacity = (float) shipService.Capacity,
+            Capacity = (float)shipService.Capacity,
             Captain = shipService.Captain,
             ShipPlate = shipService.ShipPlate,
             CompanyId = GetIdFromUser(user)

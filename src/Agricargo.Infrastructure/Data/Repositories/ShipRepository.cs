@@ -31,5 +31,11 @@ public class ShipRepository : BaseRepository<Ship>, IShipRepository
             .Include(s => s.Trips)
             .FirstOrDefault(s => s.Id == shipId);
     }
+    public override Ship Get(int id)
+    {
+        return _context.Ships
+            .Include(s => s.Trips)
+            .FirstOrDefault(s => s.Id == id);
+    }
 
 }

@@ -64,7 +64,7 @@ public class TripService : ITripService
             Destination = tripService.Destination,
             DepartureDate = tripService.DepartureDate,
             ArriveDate = tripService.ArriveDate,
-            Price = tripService.Price,
+            Price = tripService.PricePerTon,
             ShipId = tripService.ShipId,
             AvailableCapacity = ship.Capacity
         });
@@ -226,17 +226,6 @@ public class TripService : ITripService
             throw new UnauthorizedAccessException("No tienes permiso a realizar esta accion");
         }
 
-        if (trip.Ship.Trips.Count() > 1)
-        {
-            foreach (var tripOfShip in trip.Ship.Trips)
-            {
-                if ((tripRequest.DepartureDate <= tripOfShip.ArriveDate) && (tripRequest.ArriveDate >= tripOfShip.DepartureDate))
-                {
-                    throw new Exception("El barco ya tiene un viaje para esa fecha");
-                }
-            }
-        }
-
         if (trip.TripState == "En curso")
         {
             throw new Exception("No se puede modificar el viaje porque está en curso.");
@@ -245,6 +234,22 @@ public class TripService : ITripService
         if (_reservationRepository.TripHasAReservation(id))
         {
             throw new Exception("Este viaje tiene una reserva no se puede modificar");
+        }
+
+        if (trip.Ship.Trips.Count() > 1)
+        {
+            foreach (var tripOfShip in trip.Ship.Trips)
+            {
+               
+                if (tripOfShip.Id != id)
+                {
+                  
+                    if ((tripRequest.DepartureDate <= tripOfShip.ArriveDate) && (tripRequest.ArriveDate >= tripOfShip.DepartureDate))
+                    {
+                        throw new Exception("El barco ya tiene un viaje para esa fecha");
+                    }
+                }
+            }
         }
 
         trip.Origin = tripRequest.Origin ?? trip.Origin;
