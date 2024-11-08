@@ -118,7 +118,12 @@ namespace Agricargo.Application.Services
             var existingUser = _context.FindByGuid(userId);
             if (existingUser == null)
             {
-                throw new KeyNotFoundException("No se encontró el usuario.");
+                throw new Exception("No se encontró el usuario.");
+            }
+
+            if (!user.IsInRole("SuperAdmin"))
+            {
+                throw new UnauthorizedAccessException("No esta autorizado a realizar esta accion");
             }
 
             var users = _context.Get()
@@ -135,25 +140,25 @@ namespace Agricargo.Application.Services
             return users;
         }
 
-        //public void DeleteUser(ClaimsPrincipal user, string userDeleted)
-        //{
-        //    var userId = GetIdFromUser(user);
+        public void DeleteUser(ClaimsPrincipal user, string userDeleted)
+        {
+            var userId = GetIdFromUser(user);
 
-        //    if (_context.IsSuperAdmin(userId))
-        //    {
-        //        Guid guidUser = Guid.Parse(userDeleted);
-        //        var existingUser = _context.FindByGuid(guidUser);
+            if (_context.IsSuperAdmin(userId))
+            {
+                Guid guidUser = Guid.Parse(userDeleted);
+                var existingUser = _context.FindByGuid(guidUser);
 
-        //        if (existingUser == null)
-        //    {
-        //        throw new Exception("No se encontro el usuario");
-        //    }
-        //        _context.Delete(existingUser);
-        //        return;
-        //    }
+                if (existingUser == null)
+            {
+                throw new Exception("No se encontro el usuario");
+            }
+                _context.Delete(existingUser);
+                return;
+            }
 
-        //    throw new UnauthorizedAccessException("No esta autorizado a realizar esta accion");
-        //}
+            throw new UnauthorizedAccessException("No esta autorizado a realizar esta accion");
+        }
 
     
     }

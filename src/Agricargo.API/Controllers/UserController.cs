@@ -69,5 +69,37 @@ namespace Agricargo.API.Controllers
             }
         }
 
+        [HttpGet("GetUsers")]
+        public IActionResult GetUsers() 
+        {
+            try
+            {
+                var users = _userService.GetUsers(User);
+                return Ok(users);
+            }
+            catch (Exception ex)
+            { 
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("DeleteUser")]
+        public IActionResult DeleteUser(string idUser)
+        {
+            try
+            {
+                _userService.DeleteUser(User, idUser);
+                return Ok("Eliminado con exito");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
     }
 }

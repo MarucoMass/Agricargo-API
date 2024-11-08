@@ -17,7 +17,7 @@ namespace Agricargo.Application.Interfaces
 
         public void DeleteSelf(ClaimsPrincipal user);
 
-        //public void DeleteUser(ClaimsPrincipal user, string userDeleted);
+        public void DeleteUser(ClaimsPrincipal user, string userDeleted);
 
         public List<UserDTO> GetUsers(ClaimsPrincipal user);
     }
