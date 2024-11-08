@@ -35,8 +35,8 @@ namespace Agricargo.API.Controllers
         {
             try
             {
-               var fav =  _favoriteService.AddFavorite(User, tripId);
-                return Ok(fav);
+                _favoriteService.AddFavorite(User, tripId);
+                return Ok("Favorito agregado");
             }
             catch (Exception ex) 
             {
@@ -49,8 +49,8 @@ namespace Agricargo.API.Controllers
         {
             try
             {
-                var deletedFav = _favoriteService.DeleteFavorite(User, id);
-                return Ok(deletedFav);
+                 _favoriteService.DeleteFavorite(User, id);
+                return Ok("Favorito eliminado");
             }
             catch (UnauthorizedAccessException ex)
             {
