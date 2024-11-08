@@ -8,9 +8,9 @@ namespace Agricargo.Application.Interfaces;
 
 public interface IFavoriteService
 {
-    public void AddFavorite(ClaimsPrincipal user, int tripId);
+    public int AddFavorite(ClaimsPrincipal user, int tripId);
 
-    public void DeleteFavorite(ClaimsPrincipal user, int id);
+    public int DeleteFavorite(ClaimsPrincipal user, int id);
 
     public List<TripDTO> GetFavorites(ClaimsPrincipal user);
 }

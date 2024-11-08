@@ -30,7 +30,7 @@ public class FavoriteService : IFavoriteService
 
         return parsedGuid;
     }
-    public void AddFavorite(ClaimsPrincipal user, int tripId)
+    public int AddFavorite(ClaimsPrincipal user, int tripId)
     {
         var trip = _tripService.Get(tripId);
 
@@ -57,6 +57,7 @@ public class FavoriteService : IFavoriteService
 
         _favoriteRepository.Add(favorite);
 
+        return favorite.Id;
     }
 
     public List<TripDTO> GetFavorites(ClaimsPrincipal user)
@@ -130,12 +131,13 @@ public class FavoriteService : IFavoriteService
     }
 
 
-    public void DeleteFavorite(ClaimsPrincipal user, int id)
+    public int DeleteFavorite(ClaimsPrincipal user, int id)
     {
         var clientId = GetIdFromUser(user);
 
         var favorite = _favoriteRepository.GetFavoriteById(id);
 
+        var favId = favorite.Id;
 
         if (favorite == null)
         {
@@ -149,6 +151,7 @@ public class FavoriteService : IFavoriteService
 
         _favoriteRepository.Delete(favorite);
 
+        return favId;
 
     }
 }
