@@ -34,14 +34,15 @@ namespace Agricargo.API.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] RegisterRequest request)
         {
-
-            var result = _authService.Register(User, request.Email, request.Password, request.Role, request.Name, request.CompanyName);
-            if (!result)
+            try
             {
-                return BadRequest("User already exists");
+                _authService.Register(User, request.Email, request.Password, request.Role, request.Name, request.CompanyName);
+                return Ok("User registered successfully");
             }
-
-            return Ok("User registered successfully");
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

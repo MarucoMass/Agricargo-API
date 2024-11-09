@@ -89,7 +89,8 @@ namespace Agricargo.Infrastructure.Services
             var userExist = _userRepository.GetUserByEmail(email);
             if (userExist != null)
             {
-                return false;
+                throw new Exception("Cuenta con email ya existente");
+                //return false;
             }
             
             if (role == UserRole.Admin.ToString() || role == UserRole.SuperAdmin.ToString())
